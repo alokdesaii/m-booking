@@ -2,3 +2,5 @@
 .claude/
 .agents/
 .vercel/
+.vercel
+.env*
