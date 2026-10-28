@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M Booking — Travel, curated from Hong Kong</title>
+<link rel="icon" href="brand/m-booking-logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #013927; --gold: #e6c260; --orange: #ec681f; --ink: #262622;
+    --grey: #b6b6b6; --cream: #f8f6f1; --leaf: #2c904c;
+    --line: rgba(38,38,34,.14); --muted: #6b6b64;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: "Noto Sans", sans-serif; color: var(--ink); background: var(--cream); line-height: 1.6; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { padding: 0 40px; }
+
+  /* system: one display style, one label style, one button */
+  .display { font-weight: 600; text-transform: uppercase; letter-spacing: -.04em; line-height: .92; font-size: clamp(48px, 9vw, 136px); color: var(--green); }
+  .label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .pill { display: inline-flex; align-items: center; gap: 14px; padding: 6px 6px 6px 20px; border-radius: 999px; background: var(--green); color: #fff; font-size: 14px; font-weight: 500; white-space: nowrap; }
+  .pill i, .arrow { width: 32px; height: 32px; border-radius: 50%; background: var(--gold); color: var(--green); display: inline-grid; place-items: center; font-style: normal; font-size: 15px; flex: none; transition: transform .2s; }
+  .pill:hover i, a:hover > .arrow { transform: rotate(45deg); }
+  .pill.light { background: #fff; color: var(--green); }
+  .arrow.line { background: none; border: 1px solid currentColor; color: var(--green); }
+
+  /* logo */
+  .logo { display: inline-flex; align-items: center; gap: .35em; color: var(--green); font-size: 26px; line-height: 1; }
+  .logo svg { height: 1.1em; width: 1.2em; fill: currentColor; }
+  .logo span { font-weight: 300; letter-spacing: .02em; padding-bottom: .12em; white-space: nowrap; }
+  .logo span::after { content: ""; display: inline-block; width: .16em; height: .16em; border-radius: 50%; background: var(--gold); margin-left: .08em; }
+
+  /* hero */
+  /* ponytail: Unsplash placeholder photos throughout; swap for licensed imagery before launch */
+  .hero { color: #fff; min-height: 100vh; display: flex; flex-direction: column;
+    background: linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.05) 35%, rgba(0,0,0,.55)), url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1800&q=70) center/cover; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 84px; border-bottom: 1px solid rgba(255,255,255,.2); }
+  header .logo { color: #fff; }
+  nav { display: flex; gap: 32px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+  nav a:hover { color: var(--gold); }
+  .hdr-right { white-space: nowrap; display: flex; gap: 20px; align-items: center; font-size: 12px; letter-spacing: .14em; }
+  .hero-body { flex: 1; display: flex; flex-direction: column; padding: 40px 40px 36px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px 28px; font-size: 13px; letter-spacing: .04em; }
+  .pills b { color: var(--gold); font-weight: 600; }
+  .hero h1 { color: #fff; margin: 28px 0 24px; max-width: 16ch; font-size: clamp(44px, 7vw, 104px); }
+  .hero h3 { font-weight: 500; font-size: 20px; }
+  .hero p { max-width: 46ch; opacity: .85; font-size: 15px; margin: 4px 0 28px; border-left: 1px solid rgba(255,255,255,.5); padding-left: 14px; }
+
+  /* search */
+  .search { margin-top: auto; padding: 22px 24px; color: #fff; color-scheme: dark;
+    background: rgba(1,57,39,.38); backdrop-filter: blur(20px) saturate(1.2); -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgba(255,255,255,.22); }
+  .search-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .search-head h2 { font-size: 20px; font-weight: 500; letter-spacing: -.01em; }
+  .tabs { display: flex; gap: 4px; overflow-x: auto; }
+  .tabs button { background: none; border: 0; font: inherit; font-size: 14px; padding: 8px 16px; border-radius: 999px; color: rgba(255,255,255,.7); cursor: pointer; white-space: nowrap; }
+  .tabs button:hover { color: #fff; }
+  .tabs button[aria-selected="true"] { background: #fff; color: var(--green); font-weight: 500; }
+  form[hidden] { display: none; }
+  .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .field > span { display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+  .field > div { display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 14px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); transition: border-color .2s, background .2s; }
+  .field > div:focus-within { border-color: var(--gold); background: rgba(255,255,255,.16); }
+  .field svg { width: 18px; height: 18px; flex: none; fill: none; stroke: rgba(255,255,255,.7); stroke-width: 1.5; }
+  .field input, .field select { flex: 1; min-width: 0; border: 0; font: inherit; font-size: 15px; color: #fff; background: none; outline: none; }
+  .field input::placeholder { color: rgba(255,255,255,.55); }
+  .field em { font-style: normal; opacity: .5; }
+  .field:has(em) { grid-column: span 2; }
+  @media (max-width: 980px) { .field:has(em) { grid-column: auto; } .foot-row .label { width: 100%; } }
+  option { color: var(--ink); background: #fff; }
+  .foot-row { display: flex; align-items: center; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+  .foot-row .label { color: rgba(255,255,255,.65); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+  .chip input { position: absolute; opacity: 0; }
+  .chip span { display: block; padding: 6px 14px; border-radius: 999px; font-size: 13px; border: 1px solid rgba(255,255,255,.25); cursor: pointer; }
+  .chip input:checked + span { background: #fff; color: var(--green); border-color: #fff; font-weight: 500; }
+  .chip input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 2px; }
+  form .pill { border: 0; font-family: inherit; cursor: pointer; background: var(--gold); color: var(--green); font-weight: 600; padding-left: 24px; }
+  form .pill i { background: var(--green); color: var(--gold); }
+
+  /* sections */
+  section { padding: 140px 0 0; }
+  .split { display: grid; grid-template-columns: 1fr 3fr; gap: 40px; }
+  .lede { font-size: clamp(26px, 3.2vw, 42px); line-height: 1.22; letter-spacing: -.025em; font-weight: 400; color: var(--green); margin-bottom: 36px; }
+  .trust { margin-top: 72px; padding-top: 28px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .trust b { font-size: 15px; letter-spacing: .2em; color: var(--gold); }
+
+  .rows { margin-top: 56px; border-top: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: 80px 1.2fr 2fr 40px; gap: 24px; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--line); transition: padding .2s; }
+  @media (hover: hover) { .row:hover { padding-left: 12px; } }
+  .row h3 { font-weight: 500; font-size: 28px; letter-spacing: -.02em; color: var(--green); }
+  .row p { font-size: 15px; color: var(--muted); }
+  .row h3 { transition: transform .3s; }
+  @media (hover: hover) { .row:hover h3 { transform: translateX(8px); } }
+  @media (hover: hover) { .row:hover .arrow { background: var(--gold); border-color: var(--gold); } }
+  .thumb { display: none; }
+  /* ponytail: one shared preview image follows the cursor; thumbs supply the src */
+  .peek { position: fixed; left: 0; top: 0; width: 300px; aspect-ratio: 4/3; object-fit: cover; pointer-events: none; z-index: 20; opacity: 0; scale: .85; transition: opacity .25s, scale .25s; }
+  .peek.on { opacity: 1; scale: 1; }
+  @media (hover: none) { .peek { display: none; } }
+
+  .head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
+  .strip { margin-top: 48px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .strip img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; }
+  .strip .cap { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .strip .cap small { display: block; color: var(--muted); font-size: 12px; }
+
+  .faq h2 { font-size: clamp(40px, 5vw, 72px); }
+  details { border-bottom: 1px solid var(--line); padding: 22px 0; }
+  details:first-child { border-top: 1px solid var(--line); }
+  summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 24px; font-size: 18px; font-weight: 500; color: var(--green); }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-weight: 300; font-size: 26px; line-height: 1; }
+  details[open] summary::after { content: "−"; }
+  details p { color: var(--muted); font-size: 15px; max-width: 60ch; margin-top: 10px; }
+
+  .photo-cta { margin-top: 140px; min-height: 80vh; display: grid; place-items: center; text-align: center; color: #fff; padding: 80px 24px;
+    background: linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.45)), url(https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1800&q=70) center/cover; }
+  .photo-cta h2 { color: #fff; font-size: clamp(44px, 7vw, 104px); max-width: 14ch; margin: 0 auto 24px; }
+  .photo-cta p { max-width: 48ch; margin: 0 auto 32px; opacity: .9; }
+
+  footer { background: var(--green); color: rgba(248,246,241,.7); padding: 80px 0 0; font-size: 14px; overflow: hidden; }
+  .foot { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,.15); }
+  .foot .label { color: rgba(248,246,241,.5); margin-bottom: 14px; }
+  .foot a { display: block; padding: 3px 0; color: var(--cream); }
+  .foot a:hover { color: var(--gold); }
+  .foot .pill { display: inline-flex; margin-top: 20px; color: var(--green); }
+  .legal { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 20px 0; font-size: 12px; }
+  .mark { color: var(--cream); font-size: 16.5vw; white-space: nowrap; line-height: .78; margin-bottom: -.06em; text-align: center; }
+
+  @media (max-width: 980px) {
+    .wrap { padding: 0 22px; }
+    nav, .hdr-right > span { display: none; }
+    .hero-body { padding: 28px 22px; }
+    .search { padding: 18px 16px; }
+    form .pill { width: 100%; justify-content: space-between; }
+    section { padding-top: 96px; }
+    .split, .foot { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 72px 1fr 32px; gap: 4px 16px; }
+    .row .label { display: none; }
+    .thumb { display: block; grid-row: 1 / 3; grid-column: 1; width: 72px; aspect-ratio: 1; object-fit: cover; }
+    .row h3 { grid-column: 2; grid-row: 1; font-size: 22px; }
+    .row p { grid-column: 2; grid-row: 2; }
+    .row .arrow { grid-row: 1; grid-column: 3; }
+    .strip { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="m" viewBox="0 0 450 415.28"><path d="M329.26,392.89c-79.88,43.88-155.28,23.63-155.28-64.13V97.77c0-54-24.72-78.75-58.48-75.37C195.37-21.52,270.76-1.23,270.76,86.52v230.99c0,54,24.74,78.76,58.5,75.38ZM96.75,280.01V98.52c0-1.59-.08-3.16-.23-4.75-.16-1.57-.39-3.14-.7-4.69s-.7-3.09-1.16-4.61-.99-3-1.6-4.47c-.6-1.46-1.28-2.89-2.020-4.29-.74-1.4-1.56-2.76-2.44-4.08-.89-1.32-1.83-2.58-2.83-3.81-1.01-1.22-2.07-2.4-3.19-3.52s-2.29-2.19-3.51-3.18c-1.22-1.01-2.5-1.95-3.81-2.83-1.32-.88-2.67-1.69-4.07-2.44-1.4-.74-2.83-1.42-4.29-2.02-1.46-.61-2.96-1.14-4.47-1.6-1.51-.46-3.04-.85-4.6-1.15-1.55-.31-3.13-.55-4.7-.7-1.57-.16-3.16-.24-4.74-.24s-3.16.08-4.75.24c-1.57.15-3.14.39-4.69.69-1.55.31-3.09.7-4.61,1.16s-3.01.99-4.47,1.6c-1.46.6-2.89,1.28-4.29,2.02-1.39.74-2.75,1.56-4.07,2.44-1.32.89-2.59,1.83-3.81,2.83-1.22,1.01-2.39,2.07-3.51,3.19-1.12,1.12-2.19,2.29-3.19,3.51-1.01,1.22-1.95,2.5-2.83,3.81-.89,1.32-1.7,2.67-2.44,4.07-.75,1.4-1.43,2.83-2.03,4.29-.6,1.46-1.14,2.96-1.6,4.47-.46,1.52-.84,3.05-1.15,4.61s-.55,3.12-.7,4.69c-.16,1.58-.24,3.16-.24,4.75v192.75c0,87.75,75.38,108,155.24,64.13-33.74,3.37-58.5-21.38-58.5-75.38ZM294.75,66.21c33.76-3.37,58.5,21.38,58.5,75.38v181.5c0,1.58.08,3.16.24,4.74.16,1.58.39,3.15.7,4.7.31,1.55.7,3.09,1.16,4.61.45,1.52.99,3,1.59,4.46.61,1.47,1.29,2.9,2.03,4.29.74,1.39,1.56,2.76,2.44,4.07.89,1.32,1.83,2.59,2.83,3.81,1.01,1.22,2.07,2.4,3.19,3.52s2.29,2.19,3.51,3.18c1.22,1.01,2.5,1.95,3.81,2.83,1.32.88,2.67,1.69,4.08,2.44,1.39.74,2.83,1.42,4.29,2.02,1.47.61,2.96,1.14,4.47,1.6s3.05.85,4.61,1.16c1.55.3,3.12.54,4.7.7,1.57.15,3.16.23,4.74.23s3.16-.08,4.74-.23c1.58-.16,3.15-.4,4.7-.7,1.55-.31,3.09-.7,4.61-1.16s3-.99,4.47-1.6c1.46-.6,2.89-1.28,4.29-2.02,1.4-.75,2.76-1.56,4.08-2.44,1.31-.89,2.58-1.83,3.81-2.83,1.22-1,2.4-2.06,3.52-3.18s2.19-2.3,3.18-3.52c1.01-1.22,1.95-2.5,2.83-3.81.89-1.31,1.7-2.67,2.45-4.07.74-1.39,1.42-2.83,2.02-4.29.6-1.46,1.14-2.95,1.6-4.46s.84-3.05,1.15-4.61c.31-1.55.55-3.12.7-4.7.15-1.57.24-3.16.24-4.74v-192.75c0-87.75-75.34-108-155.25-64.13Z"/></symbol>
+</svg>
+
+<div class="hero">
+<header>
+  <div class="wrap">
+    <a href="/" class="logo" aria-label="M Booking home"><svg viewBox="0 0 450 415.28"><use href="#m"/></svg><span>booking</span></a>
+    <nav>
+      <a href="#flights">Flights</a><a href="#hotels">Hotels</a><a href="#resorts">Resorts</a>
+      <a href="#trains">Trains</a><a href="#attractions">Attractions</a><a href="#packages">Packages</a>
+    </nav>
+    <div class="hdr-right">
+      <span>HKD · EN</span>
+      <a class="pill light" href="#signin">Sign in <i>↗</i></a>
+    </div>
+  </div>
+</header>
+  <div class="hero-body">
+    <div class="pills"><span>HKG → Tokyo <b>HK$1,980</b></span><span>HKG → Bali <b>HK$2,350</b></span><span>Rail → Shenzhen <b>HK$75</b></span></div>
+    <h1 class="display">Travel further,<br>book smarter</h1>
+    <h3>The world, from Hong Kong</h3>
+    <p>Flights, hotels, resorts, rail, attractions and holiday packages — compared, curated and confirmed in one place.</p>
+    <!-- Search: frontend only. Each form GETs /search/<tab> with the named fields below; see README.md -->
+    <div class="search">
+      <div class="search-head">
+        <h2>Explore your journey</h2>
+        <div class="tabs" role="tablist">
+        <button type="button" role="tab" aria-selected="true" data-t="flights">Flights</button>
+        <button type="button" role="tab" aria-selected="false" data-t="hotels">Hotels</button>
+        <button type="button" role="tab" aria-selected="false" data-t="resorts">Resorts</button>
+        <button type="button" role="tab" aria-selected="false" data-t="trains">Trains</button>
+        <button type="button" role="tab" aria-selected="false" data-t="attractions">Attractions</button>
+        <button type="button" role="tab" aria-selected="false" data-t="packages">Packages</button>
+        </div>
+      </div>
+      <form id="flights" action="/search/flights" method="get">
+        <div class="fields"><label class="field"><span>From</span><div><svg viewBox="0 0 24 24"><path d="M2 16l20-8-4 10-6-3-3 4v-5"/></svg><input name="from" placeholder="City or airport" value="Hong Kong (HKG)" required></div></label><label class="field"><span>To</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="to" placeholder="City or airport" required></div></label><label class="field"><span>Depart and return</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="depart" required aria-label="depart"><em>→</em><input type="date" name="return" aria-label="return"></div></label><label class="field"><span>Travellers and class</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="pax"><option>1 adult, Economy</option><option>2 adults, Economy</option><option>1 adult, Premium Economy</option><option>1 adult, Business</option><option>2 adults, Business</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="trip" value="round-trip" checked><span>Round trip</span></label><label class="chip"><input type="radio" name="trip" value="one-way"><span>One way</span></label><label class="chip"><input type="radio" name="trip" value="multi-city"><span>Multi-city</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="hotels" action="/search/hotels" method="get" hidden>
+        <div class="fields"><label class="field"><span>Location</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="q" placeholder="Find location" required></div></label><label class="field"><span>Check-in and check-out</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="checkin" required aria-label="checkin"><em>→</em><input type="date" name="checkout" aria-label="checkout"></div></label><label class="field"><span>Guests and rooms</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="guests"><option>1 guest, 1 room</option><option>2 guests, 1 room</option><option>2 adults + 1 child, 1 room</option><option>4 guests, 2 rooms</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="type" value="hotels" checked><span>Hotels</span></label><label class="chip"><input type="radio" name="type" value="boutique"><span>Boutique</span></label><label class="chip"><input type="radio" name="type" value="apartments"><span>Apartments</span></label><label class="chip"><input type="radio" name="type" value="villas"><span>Villas</span></label><label class="chip"><input type="radio" name="type" value="hostels"><span>Hostels</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="resorts" action="/search/resorts" method="get" hidden>
+        <div class="fields"><label class="field"><span>Where</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="q" placeholder="Maldives, Bali, Phuket…" required></div></label><label class="field"><span>Check-in and check-out</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="checkin" required aria-label="checkin"><em>→</em><input type="date" name="checkout" aria-label="checkout"></div></label><label class="field"><span>Guests and rooms</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="guests"><option>2 guests, 1 villa</option><option>1 guest, 1 room</option><option>Family, 1 villa</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="style" value="any" checked><span>Any</span></label><label class="chip"><input type="radio" name="style" value="beach"><span>Beach</span></label><label class="chip"><input type="radio" name="style" value="mountain"><span>Mountain</span></label><label class="chip"><input type="radio" name="style" value="wellness"><span>Wellness</span></label><label class="chip"><input type="radio" name="style" value="all-inclusive"><span>All-inclusive</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="trains" action="/search/trains" method="get" hidden>
+        <div class="fields"><label class="field"><span>From</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="from" placeholder="Station" value="Hong Kong West Kowloon" required></div></label><label class="field"><span>To</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="to" placeholder="Station" required></div></label><label class="field"><span>Date</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="date" required aria-label="date"></div></label><label class="field"><span>Passengers and class</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="pax"><option>1 adult, Second class</option><option>2 adults, Second class</option><option>1 adult, First class</option><option>1 adult, Business</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="trip" value="one-way" checked><span>One way</span></label><label class="chip"><input type="radio" name="trip" value="return"><span>Return</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="attractions" action="/search/attractions" method="get" hidden>
+        <div class="fields"><label class="field"><span>Destination</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="q" placeholder="City or attraction" required></div></label><label class="field"><span>Date</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="date" required aria-label="date"></div></label><label class="field"><span>Guests</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="guests"><option>1 guest</option><option>2 guests</option><option>Family (2+2)</option><option>Group (5+)</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="kind" value="all" checked><span>All</span></label><label class="chip"><input type="radio" name="kind" value="tours"><span>Tours</span></label><label class="chip"><input type="radio" name="kind" value="theme-parks"><span>Theme parks</span></label><label class="chip"><input type="radio" name="kind" value="museums"><span>Museums</span></label><label class="chip"><input type="radio" name="kind" value="shows"><span>Shows</span></label><label class="chip"><input type="radio" name="kind" value="day-trips"><span>Day trips</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="packages" action="/search/packages" method="get" hidden>
+        <div class="fields"><label class="field"><span>Leaving from</span><div><svg viewBox="0 0 24 24"><path d="M2 16l20-8-4 10-6-3-3 4v-5"/></svg><input name="from" placeholder="City" value="Hong Kong" required></div></label><label class="field"><span>Going to</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="to" placeholder="Anywhere" required></div></label><label class="field"><span>Travel month</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="month" name="month" required aria-label="month"></div></label><label class="field"><span>Travellers</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="pax"><option>2 adults</option><option>1 adult</option><option>2 adults + 1 child</option><option>2 adults + 2 children</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="nights" value="3–5-nights" checked><span>3–5 nights</span></label><label class="chip"><input type="radio" name="nights" value="6–8-nights"><span>6–8 nights</span></label><label class="chip"><input type="radio" name="nights" value="9+-nights"><span>9+ nights</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section id="about">
+    <div class="wrap split">
+      <div class="label">Who we are</div>
+      <div>
+        <p class="lede">M Booking is the travel house of Mela. From Hong Kong, we compare, curate and confirm flights, stays, rail and experiences, so every part of the trip is booked with the same care as the destination.</p>
+        <a class="pill" href="#faq">Our story <i>↗</i></a>
+        <div class="trust"><b>★★★★★</b><span class="label">Trusted by travellers across 40+ countries</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="display">Ways to travel</h2>
+      <div class="rows">
+        <a class="row" href="#flights"><img class="thumb" src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=600&q=70" alt=""><span class="label">01</span><h3>Flights</h3><p>Every major carrier out of HKG, fares compared in real time.</p><span class="arrow line">↗</span></a>
+        <a class="row" href="#hotels"><img class="thumb" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=70" alt=""><span class="label">02</span><h3>Hotels</h3><p>City stays from boutique to grand, with member-only rates.</p><span class="arrow line">↗</span></a>
+        <a class="row" href="#resorts"><img class="thumb" src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&q=70" alt=""><span class="label">03</span><h3>Resorts</h3><p>Island villas and mountain retreats, hand-selected.</p><span class="arrow line">↗</span></a>
+        <a class="row" href="#trains"><img class="thumb" src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=600&q=70" alt=""><span class="label">04</span><h3>Trains</h3><p>High-speed rail into mainland China, and rail passes across Europe and Japan.</p><span class="arrow line">↗</span></a>
+        <a class="row" href="#attractions"><img class="thumb" src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=600&q=70" alt=""><span class="label">05</span><h3>Attractions</h3><p>Tickets, tours and experiences worldwide.</p><span class="arrow line">↗</span></a>
+        <a class="row" href="#packages"><img class="thumb" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=70" alt=""><span class="label">06</span><h3>Holiday packages</h3><p>Flight, stay and extras, bundled and priced as one.</p><span class="arrow line">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="head">
+        <h2 class="display">Where next</h2>
+        <a class="pill" href="#">All destinations <i>↗</i></a>
+      </div>
+      <div class="strip">
+        <a href="#"><img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=700&q=70" alt="Kyoto temple"><div class="cap"><span>Kyoto<small>Japan · 4h flight</small></span><span class="arrow line">↗</span></div></a>
+        <a href="#"><img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=700&q=70" alt="Maldives water villas"><div class="cap"><span>Maldives<small>Resorts</small></span><span class="arrow line">↗</span></div></a>
+        <a href="#"><img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=700&q=70" alt="Bali rice terraces"><div class="cap"><span>Bali<small>Holiday packages</small></span><span class="arrow line">↗</span></div></a>
+        <a href="#"><img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=700&q=70" alt="Paris skyline"><div class="cap"><span>Paris<small>France · 13h flight</small></span><span class="arrow line">↗</span></div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ponytail: FAQ answers are placeholder copy; confirm with ops/legal before launch -->
+  <section id="faq" class="faq">
+    <div class="wrap split">
+      <h2 class="display">Have some questions?</h2>
+      <div>
+        <details open><summary>Can I change or cancel a booking?</summary><p>Yes. Each fare, room and ticket shows its change and cancellation terms before you pay, and you can manage everything from your account.</p></details>
+        <details><summary>Which currencies and payment methods do you accept?</summary><p>Prices show in HKD by default and can be switched to your currency. We accept major cards and popular local wallets.</p></details>
+        <details><summary>Can I book high-speed rail into mainland China?</summary><p>Yes, from Hong Kong West Kowloon. You'll need the travel document you'll carry on the day when booking.</p></details>
+        <details><summary>Are holiday packages protected?</summary><p>Package details, inclusions and protection terms are shown on every package page before checkout.</p></details>
+        <details><summary>How do I reach support?</summary><p>Our Hong Kong team is available around the clock in English, Cantonese and Mandarin.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <div class="photo-cta">
+    <div>
+      <h2 class="display">Tell us where you want to go</h2>
+      <p>Know the destination, or just the feeling you're after? Share a few lines and our travel team will come back with an itinerary worth considering.</p>
+      <a class="pill light" href="#">Start planning <i>↗</i></a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="label">M Booking</div>
+        <p style="max-width:34ch">A Mela company. Operating internationally from Hong Kong.</p>
+        <a class="pill light" href="#">Contact us <i>↗</i></a>
+      </div>
+      <div><div class="label">Book</div><a href="#flights">Flights</a><a href="#hotels">Hotels</a><a href="#resorts">Resorts</a><a href="#trains">Trains</a><a href="#attractions">Attractions</a><a href="#packages">Packages</a></div>
+      <div><div class="label">Company</div><a href="#about">About</a><a href="#">Careers</a><a href="https://shop.mela.global/">Mela Shop</a></div>
+      <div><div class="label">Help</div><a href="#">Manage booking</a><a href="#faq">FAQ</a><a href="#">Terms</a><a href="#">Privacy</a></div>
+    </div>
+    <div class="legal"><span>© 2026 M Booking. Hong Kong SAR.</span><span>Travel Agent Licence No. —</span></div>
+  </div>
+  <div class="display mark" aria-hidden="true">M Booking</div>
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('[role=tab]');
+  const show = t => {
+    tabs.forEach(b => b.setAttribute('aria-selected', b.dataset.t === t));
+    document.querySelectorAll('.search form').forEach(f => f.hidden = f.id !== t);
+  };
+  tabs.forEach(b => b.onclick = () => show(b.dataset.t));
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    const t = a.getAttribute('href').slice(1);
+    if (document.getElementById(t)?.tagName === 'FORM') a.onclick = e => { e.preventDefault(); show(t); document.querySelector('.search').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+  });
+  const peek = document.body.appendChild(Object.assign(document.createElement('img'), { className: 'peek', alt: '' }));
+  document.querySelectorAll('.row').forEach(r => {
+    r.onmouseenter = () => { peek.src = r.querySelector('.thumb').src; peek.classList.add('on'); };
+    r.onmouseleave = () => peek.classList.remove('on');
+  });
+  document.querySelector('.rows').onmousemove = e => peek.style.translate = `${e.clientX + 28}px ${e.clientY - 112}px`;
+</script>
+</body>
+</html>

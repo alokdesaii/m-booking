@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M Booking — Travel, curated from Hong Kong</title>
+<link rel="icon" href="brand/m-booking-logo.svg">
+<link rel="preload" as="image" href="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=2000&q=70" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wdth,wght@62.5..100,500..900&family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #013927; --gold: #e6c260; --orange: #ec681f; --ink: #262622;
+    --grey: #b6b6b6; --cream: #f8f6f1; --leaf: #2c904c;
+    --line: rgba(38,38,34,.14); --muted: #6b6b64;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: "Noto Sans", sans-serif; color: var(--ink); background: #fff; line-height: 1.6; }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+  .wrap { padding: 0 40px; }
+
+  /* system */
+  .display { font-family: "Noto Sans Display", sans-serif; font-stretch: 62.5%; font-weight: 800; text-transform: uppercase; line-height: .9; letter-spacing: -.005em; color: var(--green); }
+  .label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .label.accent { color: var(--orange); font-weight: 600; }
+  .pill { display: inline-flex; align-items: center; gap: 14px; padding: 6px 6px 6px 20px; border-radius: 999px; background: var(--green); color: #fff; font-size: 14px; font-weight: 500; white-space: nowrap; border: 0; font-family: inherit; cursor: pointer; }
+  .pill i { width: 32px; height: 32px; border-radius: 50%; background: var(--gold); color: var(--green); display: inline-grid; place-items: center; font-style: normal; font-size: 15px; flex: none; transition: transform .2s; }
+  .pill:hover i { transform: rotate(45deg); }
+  .pill.light { background: #fff; color: var(--green); }
+  .pill.orange { background: var(--orange); }
+  .pill.orange i { background: #fff; color: var(--orange); }
+  section { padding: 130px 0 0; }
+  .sec-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+  .sec-head h2, .center-head h2 { font-size: clamp(48px, 6.5vw, 96px); }
+  .sec-head p { max-width: 36ch; color: var(--muted); font-size: 14px; margin-top: 14px; }
+  .center-head { text-align: center; max-width: 720px; margin: 0 auto 56px; }
+  .center-head h2 { margin: 12px 0 16px; }
+  .center-head p { color: var(--muted); font-size: 15px; }
+
+  /* rotating badge */
+  .badge { width: 150px; height: 150px; border-radius: 50%; background: var(--orange); color: #fff; display: grid; place-items: center; position: absolute; z-index: 3; box-shadow: 0 20px 40px -20px rgba(0,0,0,.4); }
+  .badge svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: #fff; font-size: 8.5px; font-weight: 600; letter-spacing: 1px; animation: spin 16s linear infinite; }
+  .badge i { width: 64px; height: 64px; border-radius: 50%; border: 1.5px solid #fff; display: grid; place-items: center; font-style: normal; font-size: 26px; transition: transform .3s; }
+  .badge:hover i { transform: rotate(45deg); }
+  @keyframes spin { to { rotate: 360deg; } }
+  @media (prefers-reduced-motion: reduce) { .badge svg { animation: none; } }
+
+  /* logo */
+  .logo { display: inline-flex; align-items: center; gap: .35em; color: var(--green); font-size: 26px; line-height: 1; }
+  .logo svg { height: 1.1em; width: 1.2em; fill: currentColor; }
+  .logo span { font-weight: 300; letter-spacing: .02em; padding-bottom: .12em; white-space: nowrap; }
+  .logo span::after { content: ""; display: inline-block; width: .16em; height: .16em; border-radius: 50%; background: var(--gold); margin-left: .08em; }
+
+  /* hero */
+  /* ponytail: Unsplash placeholder photos throughout; swap for licensed imagery before launch */
+  .hero { color: #fff; min-height: 100vh; display: flex; flex-direction: column;
+    background: linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.05) 40%, rgba(0,0,0,.55)), url(https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=2000&q=70) center/cover; }
+  header { position: fixed; inset: 0 0 auto; z-index: 30; transition: background .35s, backdrop-filter .35s; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; height: 84px; transition: height .35s; }
+  header.scrolled { background: rgba(1,57,39,.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  header.scrolled .wrap { height: 66px; }
+  header .logo { color: #fff; }
+  nav { display: flex; gap: 32px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+  nav a:hover { color: var(--gold); }
+  .hdr-right { white-space: nowrap; display: flex; gap: 20px; align-items: center; font-size: 12px; letter-spacing: .14em; }
+  .hero-body { flex: 1; display: flex; flex-direction: column; padding: 108px 40px 36px; }
+  .hero h1 { color: #fff; font-size: clamp(60px, 10vw, 168px); display: grid; margin: 12px 0 0; }
+  .hero h1 span:nth-child(2) { justify-self: end; }
+  .hero-note { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin: 20px 0 32px; flex-wrap: wrap; }
+  .hero-note p { max-width: 38ch; font-size: 15px; opacity: .9; }
+  .deals { display: flex; flex-wrap: wrap; gap: 6px 28px; font-size: 13px; letter-spacing: .04em; }
+  .deals b { color: var(--gold); font-weight: 600; }
+
+  /* search */
+  .search { margin-top: auto; padding: 22px 24px; color: #fff; color-scheme: dark;
+    background: rgba(1,57,39,.38); backdrop-filter: blur(20px) saturate(1.2); -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgba(255,255,255,.22); }
+  .search-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+  .search-head h2 { font-size: 20px; font-weight: 500; letter-spacing: -.01em; }
+  .tabs { display: flex; gap: 4px; overflow-x: auto; }
+  .tabs button { background: none; border: 0; font: inherit; font-size: 14px; padding: 8px 16px; border-radius: 999px; color: rgba(255,255,255,.7); cursor: pointer; white-space: nowrap; }
+  .tabs button:hover { color: #fff; }
+  .tabs button[aria-selected="true"] { background: #fff; color: var(--green); font-weight: 500; }
+  form[hidden] { display: none; }
+  .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .field > span { display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+  .field > div { display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 14px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); transition: border-color .2s, background .2s; }
+  .field > div:focus-within { border-color: var(--gold); background: rgba(255,255,255,.16); }
+  .field svg { width: 18px; height: 18px; flex: none; fill: none; stroke: rgba(255,255,255,.7); stroke-width: 1.5; }
+  .field input, .field select { flex: 1; min-width: 0; border: 0; font: inherit; font-size: 15px; color: #fff; background: none; outline: none; }
+  .field input::placeholder { color: rgba(255,255,255,.55); }
+  .field em { font-style: normal; opacity: .5; }
+  .field:has(em) { grid-column: span 2; }
+  @media (max-width: 980px) { .field:has(em) { grid-column: auto; } .foot-row .label { width: 100%; } }
+  option { color: var(--ink); background: #fff; }
+  .foot-row { display: flex; align-items: center; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+  .foot-row .label { color: rgba(255,255,255,.65); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+  .chip input { position: absolute; opacity: 0; }
+  .chip span { display: block; padding: 6px 14px; border-radius: 999px; font-size: 13px; border: 1px solid rgba(255,255,255,.25); cursor: pointer; }
+  .chip input:checked + span { background: #fff; color: var(--green); border-color: #fff; font-weight: 500; }
+  .chip input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 2px; }
+  form .pill { border: 0; font-family: inherit; cursor: pointer; background: var(--gold); color: var(--green); font-weight: 600; padding-left: 24px; }
+  form .pill i { background: var(--green); color: var(--gold); }
+
+  /* most viewed */
+  .chips-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chips-row .chip span { border-color: var(--line); color: var(--ink); }
+  .chips-row .chip input:checked + span { background: var(--orange); border-color: var(--orange); color: #fff; }
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .card { position: relative; }
+  .card img { width: 100%; aspect-ratio: 4/4.4; object-fit: cover; transition: filter .3s; }
+  .card:hover img { filter: brightness(1.06); }
+  .fav { position: absolute; top: 12px; right: 12px; width: 36px; height: 36px; border-radius: 50%; border: 0; background: #fff; color: var(--orange); font-size: 16px; cursor: pointer; }
+  .fav[aria-pressed="true"] { background: var(--orange); color: #fff; }
+  .card-meta { display: flex; justify-content: space-between; gap: 12px; padding-top: 14px; font-size: 13px; }
+  .card h3 { font-size: 15px; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: .02em; }
+  .card small { color: var(--muted); font-size: 12px; display: block; }
+  .card .price { color: var(--orange); font-weight: 600; font-size: 14px; }
+
+  /* explore band */
+  .band { background: var(--green); color: var(--cream); margin-top: 130px; padding: 100px 0 0; }
+  .band h2 { color: var(--cream); font-size: clamp(56px, 10vw, 168px); }
+  .inl { display: inline-block; width: 2.1em; height: .72em; border-radius: 999px; background: center/cover; vertical-align: .08em; }
+  .band-photo { position: relative; margin-top: 90px; height: 92vh; min-height: 560px;
+    background: linear-gradient(transparent 55%, rgba(0,0,0,.55)), url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2000&q=70) center/cover; }
+  .band-photo .badge { top: -75px; left: 50%; translate: -50% 0; }
+  .band-note { position: absolute; right: 40px; top: 56px; max-width: 32ch; font-size: 14px; color: #fff; }
+  .band-note .label { color: var(--gold); display: block; margin-bottom: 10px; }
+  .stats { position: absolute; left: 40px; right: 40px; bottom: 36px; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; color: #fff; }
+  .stats div { display: flex; align-items: start; gap: 10px; }
+  .stats b { font-family: "Noto Sans Display", sans-serif; font-stretch: 62.5%; font-weight: 800; font-size: clamp(64px, 9vw, 140px); line-height: .85; }
+  .stats span { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; max-width: 12ch; line-height: 1.3; padding-top: 8px; }
+
+  /* discover */
+  .discover { display: grid; grid-template-columns: 1.1fr 1fr; gap: 120px; align-items: start; }
+  .discover-copy { display: grid; grid-template-columns: 1fr 1.3fr; gap: 32px; margin-top: 40px; }
+  .discover-copy .lead { color: var(--orange); font-weight: 600; font-size: 18px; line-height: 1.35; grid-column: 2; }
+  .discover-copy p { font-size: 14px; color: var(--muted); }
+  .discover-copy .body { grid-column: 2; display: grid; gap: 14px; }
+  .discover-photo { position: relative; }
+  .discover-photo img { width: 100%; aspect-ratio: 4/5; object-fit: cover; }
+  .discover-photo .badge { left: -75px; top: 50%; translate: 0 -50%; }
+
+  /* reel */
+  .reel { margin-top: 130px; height: 86vh; min-height: 520px; display: grid; place-items: center; text-align: center; color: #fff; position: relative;
+    background: linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.4)), url(https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=2000&q=70) center/cover; }
+  .reel .label { position: absolute; top: 28px; right: 40px; color: #fff; }
+  .reel h2 { color: #fff; font-size: clamp(32px, 4vw, 56px); max-width: 18ch; margin: 0 auto 28px; }
+  .play { width: 88px; height: 88px; border-radius: 50%; border: 0; background: rgba(255,255,255,.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #fff; font-size: 26px; cursor: pointer; outline: 1px solid rgba(255,255,255,.6); outline-offset: 8px; transition: background .2s; }
+  .play:hover { background: var(--orange); }
+
+  /* top destinations */
+  .dest-list { border-top: 1px solid var(--line); }
+  .dest-row { display: grid; grid-template-columns: 70px 1fr 1fr 40px; gap: 24px; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--line); transition: background .25s, color .25s; }
+  .dest-row h3 { font-weight: 500; font-size: 18px; text-transform: uppercase; letter-spacing: .06em; }
+  .dest-row p { font-size: 13px; color: var(--muted); transition: color .25s; }
+  .dest-row .arr { justify-self: end; font-size: 18px; }
+  .dest-row img { display: none; }
+  @media (hover: hover) {
+    .dest-row:hover { background: var(--orange); color: #fff; }
+    .dest-row:hover p, .dest-row:hover .label { color: rgba(255,255,255,.85); }
+  }
+  /* ponytail: one shared tilted preview follows the cursor; row images supply the src */
+  .peek { position: fixed; left: 0; top: 0; width: 260px; aspect-ratio: 4/3; object-fit: cover; pointer-events: none; z-index: 20; border: 6px solid #fff; box-shadow: 0 30px 50px -20px rgba(0,0,0,.4); opacity: 0; scale: .85; rotate: -6deg; transition: opacity .25s, scale .25s; }
+  .peek.on { opacity: 1; scale: 1; }
+  @media (hover: none) { .peek { display: none; } }
+
+  /* guide */
+  .guide { display: grid; grid-template-columns: 1fr 2fr; gap: 56px; }
+  .guide-intro p { color: var(--muted); font-size: 14px; margin: 18px 0 28px; max-width: 34ch; }
+  .posts { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; }
+  .post img { width: 100%; aspect-ratio: 16/10; object-fit: cover; margin-bottom: 14px; transition: filter .3s; }
+  .post:first-child { grid-row: span 2; }
+  .post:first-child img { aspect-ratio: 4/4.2; }
+  .post:hover img { filter: brightness(1.06); }
+  .post h3 { font-size: 17px; font-weight: 600; color: var(--green); line-height: 1.35; margin-top: 6px; }
+  .post:hover h3 { color: var(--orange); }
+
+  /* concierges */
+  .experts { display: flex; justify-content: center; align-items: end; gap: 0; padding: 30px 0 20px; }
+  .expert { width: 300px; padding: 24px; color: #fff; display: grid; gap: 18px; box-shadow: 0 30px 50px -25px rgba(0,0,0,.35); transition: rotate .3s, translate .3s; }
+  .expert:nth-child(1) { background: var(--orange); rotate: -7deg; translate: 20px 0; }
+  .expert:nth-child(2) { background: var(--green); translate: 0 -40px; z-index: 1; }
+  .expert:nth-child(3) { background: var(--gold); color: var(--green); rotate: 7deg; translate: -20px 0; }
+  .expert:hover { rotate: 0deg; z-index: 2; }
+  .expert .who { display: flex; align-items: center; gap: 14px; }
+  .avatar { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.25); display: grid; place-items: center; font-weight: 600; font-size: 18px; }
+  .expert h3 { font-size: 18px; font-weight: 600; line-height: 1.2; }
+  .expert small { display: block; font-size: 12px; opacity: .8; }
+  .expert dl { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 1px solid currentColor; padding-top: 14px; }
+  .expert dt { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; opacity: .75; }
+  .expert dd { font-size: 14px; font-weight: 500; }
+
+  /* contact */
+  .contact { text-align: center; }
+  .contact h3 { font-size: 22px; font-weight: 500; color: var(--green); line-height: 1.35; }
+  .contact form { display: flex; justify-content: center; align-items: end; gap: 24px; margin-top: 32px; flex-wrap: wrap; padding: 0; }
+  .contact input { border: 0; border-bottom: 1px solid var(--grey); padding: 10px 2px; font: inherit; font-size: 15px; width: 280px; outline: none; background: none; }
+  .contact input:focus { border-color: var(--orange); }
+
+  /* footer */
+  footer { background: var(--green); color: rgba(248,246,241,.75); margin-top: 130px; padding: 80px 0 0; font-size: 14px; }
+  .foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr 120px; gap: 40px; }
+  footer .display { color: var(--cream); font-size: clamp(48px, 6vw, 88px); }
+  .news { display: flex; gap: 10px; margin-top: 28px; max-width: 420px; padding: 0; }
+  .news input { flex: 1; min-width: 0; background: none; border: 0; border-bottom: 1px solid rgba(255,255,255,.4); color: #fff; font: inherit; padding: 10px 2px; outline: none; }
+  .news input::placeholder { color: rgba(255,255,255,.5); }
+  .foot .label { color: rgba(248,246,241,.5); margin-bottom: 14px; }
+  .foot a { display: block; padding: 3px 0; color: var(--cream); }
+  .foot a:hover { color: var(--gold); }
+  .totop { display: grid !important; place-items: center; height: 100%; min-height: 220px; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; font-size: 40px; color: var(--gold) !important; transition: background .25s; }
+  .totop:hover { background: var(--orange); color: #fff !important; }
+  .legal { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 64px; padding: 22px 0; border-top: 1px solid rgba(255,255,255,.15); font-size: 12px; }
+  .legal .logo { color: var(--cream); font-size: 20px; }
+
+  /* effects: CSS + one IntersectionObserver, no libraries */
+  html { scroll-behavior: smooth; }
+  .reveal { opacity: 0; translate: 0 28px; transition: opacity .9s cubic-bezier(.2,.7,.2,1), translate .9s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0ms); }
+  .reveal.in { opacity: 1; translate: 0 0; }
+  .band h2 .inl { transition: width 1.1s cubic-bezier(.2,.7,.2,1) .25s; }
+  .band h2:not(.in) .inl { width: 0; }
+  .hero h1 span, .hero-note, .hero .search { animation: rise 1.1s cubic-bezier(.2,.7,.2,1) both; }
+  .hero h1 span:nth-child(2) { animation-delay: .12s; }
+  .hero-note { animation-delay: .25s; }
+  .hero .search { animation-delay: .4s; }
+  @keyframes rise { from { opacity: 0; translate: 0 32px; } }
+  .pill, .fav, .play { transition: transform .2s, background .2s; }
+  .pill:active, .fav:active { transform: scale(.96); }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .band-photo, .reel { animation: drift linear both; animation-timeline: view(); }
+      @keyframes drift { from { background-position: center 20%; } to { background-position: center 80%; } }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal, .band h2 .inl { opacity: 1; translate: none; transition: none; }
+    .band h2:not(.in) .inl { width: 2.1em; }
+    .hero * { animation: none !important; }
+  }
+
+  @media (max-width: 980px) {
+    .wrap { padding: 0 20px; }
+    nav, .hdr-right > span { display: none; }
+    .hero-body { padding: 96px 20px 24px; }
+    .hero h1 span:nth-child(2) { justify-self: start; }
+    .search { padding: 18px 16px; }
+    form .pill { width: 100%; justify-content: space-between; }
+    .foot-row .label { width: 100%; }
+    section { padding-top: 90px; }
+    .cards { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .band { margin-top: 90px; padding-top: 70px; }
+    .band-photo { height: 80vh; }
+    .band-note { left: 20px; right: 20px; top: 100px; }
+    .stats { left: 20px; right: 20px; }
+    .discover, .discover-copy, .guide, .posts, .foot { grid-template-columns: 1fr; }
+    .discover { gap: 80px; }
+    .discover-copy .lead, .discover-copy .body { grid-column: auto; }
+    .discover-photo .badge { left: auto; right: 16px; top: -60px; translate: none; width: 120px; height: 120px; }
+    .post:first-child { grid-row: auto; }
+    .dest-row { grid-template-columns: 64px 1fr 24px; padding: 14px 0; }
+    .dest-row img { display: block; grid-row: 1 / 3; width: 64px; aspect-ratio: 1; object-fit: cover; }
+    .dest-row .label { display: none; }
+    .dest-row p { grid-column: 2; }
+    .dest-row .arr { grid-column: 3; grid-row: 1; }
+    .experts { flex-direction: column; align-items: center; gap: 16px; }
+    .expert { translate: none !important; rotate: 0deg !important; width: 100%; max-width: 360px; }
+    .totop { min-height: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="m" viewBox="0 0 450 415.28"><path d="M329.26,392.89c-79.88,43.88-155.28,23.63-155.28-64.13V97.77c0-54-24.72-78.75-58.48-75.37C195.37-21.52,270.76-1.23,270.76,86.52v230.99c0,54,24.74,78.76,58.5,75.38ZM96.75,280.01V98.52c0-1.59-.08-3.16-.23-4.75-.16-1.57-.39-3.14-.7-4.69s-.7-3.09-1.16-4.61-.99-3-1.6-4.47c-.6-1.46-1.28-2.89-2.020-4.29-.74-1.4-1.56-2.76-2.44-4.08-.89-1.32-1.83-2.58-2.83-3.81-1.01-1.22-2.07-2.4-3.19-3.52s-2.29-2.19-3.51-3.18c-1.22-1.01-2.5-1.95-3.81-2.83-1.32-.88-2.67-1.69-4.07-2.44-1.4-.74-2.83-1.42-4.29-2.02-1.46-.61-2.96-1.14-4.47-1.6-1.51-.46-3.04-.85-4.6-1.15-1.55-.31-3.13-.55-4.7-.7-1.57-.16-3.16-.24-4.74-.24s-3.16.08-4.75.24c-1.57.15-3.14.39-4.69.69-1.55.31-3.09.7-4.61,1.16s-3.01.99-4.47,1.6c-1.46.6-2.89,1.28-4.29,2.02-1.39.74-2.75,1.56-4.07,2.44-1.32.89-2.59,1.83-3.81,2.83-1.22,1.01-2.39,2.07-3.51,3.19-1.12,1.12-2.19,2.29-3.19,3.51-1.01,1.22-1.95,2.5-2.83,3.81-.89,1.32-1.7,2.67-2.44,4.07-.75,1.4-1.43,2.83-2.03,4.29-.6,1.46-1.14,2.96-1.6,4.47-.46,1.52-.84,3.05-1.15,4.61s-.55,3.12-.7,4.69c-.16,1.58-.24,3.16-.24,4.75v192.75c0,87.75,75.38,108,155.24,64.13-33.74,3.37-58.5-21.38-58.5-75.38ZM294.75,66.21c33.76-3.37,58.5,21.38,58.5,75.38v181.5c0,1.58.08,3.16.24,4.74.16,1.58.39,3.15.7,4.7.31,1.55.7,3.09,1.16,4.61.45,1.52.99,3,1.59,4.46.61,1.47,1.29,2.9,2.03,4.29.74,1.39,1.56,2.76,2.44,4.07.89,1.32,1.83,2.59,2.83,3.81,1.01,1.22,2.07,2.4,3.19,3.52s2.29,2.19,3.51,3.18c1.22,1.01,2.5,1.95,3.81,2.83,1.32.88,2.67,1.69,4.08,2.44,1.39.74,2.83,1.42,4.29,2.02,1.47.61,2.96,1.14,4.47,1.6s3.05.85,4.61,1.16c1.55.3,3.12.54,4.7.7,1.57.15,3.16.23,4.74.23s3.16-.08,4.74-.23c1.58-.16,3.15-.4,4.7-.7,1.55-.31,3.09-.7,4.61-1.16s3-.99,4.47-1.6c1.46-.6,2.89-1.28,4.29-2.02,1.4-.75,2.76-1.56,4.08-2.44,1.31-.89,2.58-1.83,3.81-2.83,1.22-1,2.4-2.06,3.52-3.18s2.19-2.3,3.18-3.52c1.01-1.22,1.95-2.5,2.83-3.81.89-1.31,1.7-2.67,2.45-4.07.74-1.39,1.42-2.83,2.02-4.29.6-1.46,1.14-2.95,1.6-4.46s.84-3.05,1.15-4.61c.31-1.55.55-3.12.7-4.7.15-1.57.24-3.16.24-4.74v-192.75c0-87.75-75.34-108-155.25-64.13Z"/></symbol>
+</svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><path id="ring" d="M50,50 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0"/></svg>
+
+<div class="hero">
+<header>
+  <div class="wrap">
+    <a href="/" class="logo" aria-label="M Booking home"><svg viewBox="0 0 450 415.28"><use href="#m"/></svg><span>booking</span></a>
+    <nav>
+      <a href="#flights">Flights</a><a href="#hotels">Hotels</a><a href="#resorts">Resorts</a>
+      <a href="#trains">Trains</a><a href="#attractions">Attractions</a><a href="#packages">Packages</a>
+    </nav>
+    <div class="hdr-right">
+      <span>HKD · EN</span>
+      <a class="pill light" href="#signin">Sign in <i>↗</i></a>
+    </div>
+  </div>
+</header>
+  <div class="hero-body">
+    <h1 class="display"><span>Start your journey</span><span>from Hong Kong</span></h1>
+    <div class="hero-note">
+      <p>Flights, hotels, resorts, rail, attractions and holiday packages — compared, curated and confirmed in one place.</p>
+      <div class="deals"><span>HKG → Tokyo <b>HK$1,980</b></span><span>HKG → Bali <b>HK$2,350</b></span><span>Rail → Shenzhen <b>HK$75</b></span></div>
+    </div>
+    <!-- Search: frontend only. Each form GETs /search/<tab> with the named fields below; see README.md -->
+    <div class="search">
+      <div class="search-head">
+        <h2>Explore your journey</h2>
+        <div class="tabs" role="tablist">
+        <button type="button" role="tab" aria-selected="true" data-t="flights">Flights</button>
+        <button type="button" role="tab" aria-selected="false" data-t="hotels">Hotels</button>
+        <button type="button" role="tab" aria-selected="false" data-t="resorts">Resorts</button>
+        <button type="button" role="tab" aria-selected="false" data-t="trains">Trains</button>
+        <button type="button" role="tab" aria-selected="false" data-t="attractions">Attractions</button>
+        <button type="button" role="tab" aria-selected="false" data-t="packages">Packages</button>
+        </div>
+      </div>
+      <form id="flights" action="/search/flights" method="get">
+        <div class="fields"><label class="field"><span>From</span><div><svg viewBox="0 0 24 24"><path d="M2 16l20-8-4 10-6-3-3 4v-5"/></svg><input name="from" placeholder="City or airport" value="Hong Kong (HKG)" required></div></label><label class="field"><span>To</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="to" placeholder="City or airport" required></div></label><label class="field"><span>Depart and return</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="depart" required aria-label="depart"><em>→</em><input type="date" name="return" aria-label="return"></div></label><label class="field"><span>Travellers and class</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="pax"><option>1 adult, Economy</option><option>2 adults, Economy</option><option>1 adult, Premium Economy</option><option>1 adult, Business</option><option>2 adults, Business</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="trip" value="round-trip" checked><span>Round trip</span></label><label class="chip"><input type="radio" name="trip" value="one-way"><span>One way</span></label><label class="chip"><input type="radio" name="trip" value="multi-city"><span>Multi-city</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="hotels" action="/search/hotels" method="get" hidden>
+        <div class="fields"><label class="field"><span>Location</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="q" placeholder="Find location" required></div></label><label class="field"><span>Check-in and check-out</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="checkin" required aria-label="checkin"><em>→</em><input type="date" name="checkout" aria-label="checkout"></div></label><label class="field"><span>Guests and rooms</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="guests"><option>1 guest, 1 room</option><option>2 guests, 1 room</option><option>2 adults + 1 child, 1 room</option><option>4 guests, 2 rooms</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="type" value="hotels" checked><span>Hotels</span></label><label class="chip"><input type="radio" name="type" value="boutique"><span>Boutique</span></label><label class="chip"><input type="radio" name="type" value="apartments"><span>Apartments</span></label><label class="chip"><input type="radio" name="type" value="villas"><span>Villas</span></label><label class="chip"><input type="radio" name="type" value="hostels"><span>Hostels</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="resorts" action="/search/resorts" method="get" hidden>
+        <div class="fields"><label class="field"><span>Where</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="q" placeholder="Maldives, Bali, Phuket…" required></div></label><label class="field"><span>Check-in and check-out</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="checkin" required aria-label="checkin"><em>→</em><input type="date" name="checkout" aria-label="checkout"></div></label><label class="field"><span>Guests and rooms</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="guests"><option>2 guests, 1 villa</option><option>1 guest, 1 room</option><option>Family, 1 villa</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="style" value="any" checked><span>Any</span></label><label class="chip"><input type="radio" name="style" value="beach"><span>Beach</span></label><label class="chip"><input type="radio" name="style" value="mountain"><span>Mountain</span></label><label class="chip"><input type="radio" name="style" value="wellness"><span>Wellness</span></label><label class="chip"><input type="radio" name="style" value="all-inclusive"><span>All-inclusive</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="trains" action="/search/trains" method="get" hidden>
+        <div class="fields"><label class="field"><span>From</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="from" placeholder="Station" value="Hong Kong West Kowloon" required></div></label><label class="field"><span>To</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="to" placeholder="Station" required></div></label><label class="field"><span>Date</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="date" required aria-label="date"></div></label><label class="field"><span>Passengers and class</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="pax"><option>1 adult, Second class</option><option>2 adults, Second class</option><option>1 adult, First class</option><option>1 adult, Business</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="trip" value="one-way" checked><span>One way</span></label><label class="chip"><input type="radio" name="trip" value="return"><span>Return</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="attractions" action="/search/attractions" method="get" hidden>
+        <div class="fields"><label class="field"><span>Destination</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="q" placeholder="City or attraction" required></div></label><label class="field"><span>Date</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" name="date" required aria-label="date"></div></label><label class="field"><span>Guests</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="guests"><option>1 guest</option><option>2 guests</option><option>Family (2+2)</option><option>Group (5+)</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="kind" value="all" checked><span>All</span></label><label class="chip"><input type="radio" name="kind" value="tours"><span>Tours</span></label><label class="chip"><input type="radio" name="kind" value="theme-parks"><span>Theme parks</span></label><label class="chip"><input type="radio" name="kind" value="museums"><span>Museums</span></label><label class="chip"><input type="radio" name="kind" value="shows"><span>Shows</span></label><label class="chip"><input type="radio" name="kind" value="day-trips"><span>Day trips</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+      <form id="packages" action="/search/packages" method="get" hidden>
+        <div class="fields"><label class="field"><span>Leaving from</span><div><svg viewBox="0 0 24 24"><path d="M2 16l20-8-4 10-6-3-3 4v-5"/></svg><input name="from" placeholder="City" value="Hong Kong" required></div></label><label class="field"><span>Going to</span><div><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><input name="to" placeholder="Anywhere" required></div></label><label class="field"><span>Travel month</span><div><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="month" name="month" required aria-label="month"></div></label><label class="field"><span>Travellers</span><div><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg><select name="pax"><option>2 adults</option><option>1 adult</option><option>2 adults + 1 child</option><option>2 adults + 2 children</option></select></div></label></div>
+        <div class="foot-row"><span class="label">Filter</span><div class="chips"><label class="chip"><input type="radio" name="nights" value="3–5-nights" checked><span>3–5 nights</span></label><label class="chip"><input type="radio" name="nights" value="6–8-nights"><span>6–8 nights</span></label><label class="chip"><input type="radio" name="nights" value="9+-nights"><span>9+ nights</span></label></div><button class="pill">Search <i>→</i></button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<main>
+  <!-- ponytail: card data is placeholder; backend renders the real list -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <div><h2 class="display">Most viewed</h2><p>The stays travellers from Hong Kong are looking at right now.</p></div>
+        <div class="chips-row" role="radiogroup" aria-label="Filter most viewed">
+          <label class="chip"><input type="radio" name="mv" checked><span>Hotels</span></label>
+          <label class="chip"><input type="radio" name="mv"><span>Resorts</span></label>
+          <label class="chip"><input type="radio" name="mv"><span>Packages</span></label>
+          <label class="chip"><input type="radio" name="mv"><span>Attractions</span></label>
+        </div>
+      </div>
+      <div class="cards">
+        <a class="card" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=700&q=70" alt=""><button class="fav" type="button" aria-pressed="false" aria-label="Save">♥</button><div class="card-meta"><div><h3>The Lakeside Lodge</h3><small>Queenstown, New Zealand</small></div><div><small>★ 4.9</small><span class="price">HK$1,850</span></div></div></a>
+        <a class="card" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=700&q=70" alt=""><button class="fav" type="button" aria-pressed="false" aria-label="Save">♥</button><div class="card-meta"><div><h3>Ryokan Hanare</h3><small>Kyoto, Japan</small></div><div><small>★ 4.8</small><span class="price">HK$2,400</span></div></div></a>
+        <a class="card" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=700&q=70" alt=""><button class="fav" type="button" aria-pressed="false" aria-label="Save">♥</button><div class="card-meta"><div><h3>Villa Sereno</h3><small>Bali, Indonesia</small></div><div><small>★ 4.9</small><span class="price">HK$1,620</span></div></div></a>
+        <a class="card" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=700&q=70" alt=""><button class="fav" type="button" aria-pressed="false" aria-label="Save">♥</button><div class="card-meta"><div><h3>Casa Azul</h3><small>Phuket, Thailand</small></div><div><small>★ 4.7</small><span class="price">HK$1,180</span></div></div></a>
+      </div>
+    </div>
+  </section>
+
+  <div class="band">
+    <div class="wrap">
+      <h2 class="display">Explore <span class="inl" style="background-image:url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=60)"></span> the<br>ideal place for <span class="inl" style="background-image:url(https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&q=60)"></span><br><span class="inl" style="background-image:url(https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&q=60)"></span> your journey</h2>
+    </div>
+    <div class="band-photo">
+      <a class="badge" href="#about" aria-label="Read more about M Booking"><svg viewBox="0 0 100 100" aria-hidden="true"><text><textPath href="#ring" textLength="248">READ MORE • READ MORE • READ MORE •</textPath></text></svg><i>↗</i></a>
+      <div class="band-note" id="about"><span class="label">Who we are</span>M Booking is the travel house of Mela. From Hong Kong, we compare, curate and confirm every part of the trip with the same care as the destination.</div>
+      <!-- ponytail: stats are placeholder claims; confirm before launch -->
+      <div class="stats">
+        <div><b>06</b><span>Ways to travel</span></div>
+        <div><b>24/7</b><span>Concierge support</span></div>
+        <div><b>HK$0</b><span>Booking fees</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap discover">
+      <div>
+        <div class="label accent">Editor's pick</div>
+        <h2 class="display" style="font-size:clamp(48px,6.5vw,96px);margin-top:12px">Discover<br>special destinations</h2>
+        <div class="discover-copy">
+          <p class="lead">Kyoto in late autumn: maple-lit temples, quiet ryokans and kaiseki dinners, four hours from HKG.</p>
+          <div class="body">
+            <p>Arrive after the crowds of peak foliage and the city slows down. We pair a direct flight with a hand-picked ryokan and a private guide for the temples worth waking up early for.</p>
+            <p>Add a night in Osaka or the Shinkansen to Tokyo, and we'll fold it into one itinerary, one payment and one confirmation.</p>
+            <div><a class="pill orange" href="#packages">View the itinerary <i>↗</i></a></div>
+          </div>
+        </div>
+      </div>
+      <div class="discover-photo">
+        <a class="badge" href="#packages" aria-label="Read more about Kyoto"><svg viewBox="0 0 100 100" aria-hidden="true"><text><textPath href="#ring" textLength="248">READ MORE • READ MORE • READ MORE •</textPath></text></svg><i>↗</i></a>
+        <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1200&q=70" alt="Kyoto temple in autumn">
+      </div>
+    </div>
+  </section>
+
+  <div class="reel">
+    <span class="label">Brand film</span>
+    <div>
+      <h2 class="display">We are always ready to find the perfect place for you</h2>
+      <!-- ponytail: play button is a hook only; wire to a video modal when the film exists -->
+      <button class="play" type="button" aria-label="Play brand film">▶</button>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="center-head">
+        <div class="label accent">Popular from Hong Kong</div>
+        <h2 class="display">Top destinations</h2>
+        <p>Where our travellers are heading this season, from short-haul weekends to once-a-year escapes.</p>
+      </div>
+      <div class="dest-list">
+        <a class="dest-row" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=70" alt=""><span class="label">01</span><h3>Japan</h3><p>Kyoto, Tokyo, Hokkaido · from 4h</p><span class="arr">→</span></a>
+        <a class="dest-row" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=600&q=70" alt=""><span class="label">02</span><h3>Thailand</h3><p>Bangkok, Phuket, Chiang Mai · from 3h</p><span class="arr">→</span></a>
+        <a class="dest-row" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&q=70" alt=""><span class="label">03</span><h3>Maldives</h3><p>Overwater villas and private islands · from 6h</p><span class="arr">→</span></a>
+        <a class="dest-row" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=70" alt=""><span class="label">04</span><h3>Indonesia</h3><p>Bali, Lombok, Komodo · from 5h</p><span class="arr">→</span></a>
+        <a class="dest-row" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=70" alt=""><span class="label">05</span><h3>France</h3><p>Paris, Provence, the Riviera · from 13h</p><span class="arr">→</span></a>
+        <a class="dest-row" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=600&q=70" alt=""><span class="label">06</span><h3>Switzerland</h3><p>Zermatt, Lucerne, the Glacier Express · from 13h</p><span class="arr">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ponytail: articles are placeholder copy -->
+  <section>
+    <div class="wrap guide">
+      <div class="guide-intro">
+        <div class="label accent">Journal</div>
+        <h2 class="display" style="font-size:clamp(48px,6.5vw,96px);margin-top:12px">Explore &amp; stay guide</h2>
+        <p>Practical guides and slow-travel stories from our Hong Kong team.</p>
+        <a class="pill" href="#">All stories <i>↗</i></a>
+      </div>
+      <div class="posts">
+        <a class="post" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1528164344705-47542687000d?w=900&q=70" alt=""><span class="label">Japan · 6 min</span><h3>A first-timer's guide to staying in a ryokan</h3></a>
+        <a class="post" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700&q=70" alt=""><span class="label">Rail · 4 min</span><h3>Hong Kong to the mainland by high-speed rail: what to know</h3></a>
+        <a class="post" href="#"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=700&q=70" alt=""><span class="label">Resorts · 5 min</span><h3>Five island resorts within six hours of HKG</h3></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ponytail: concierge profiles are placeholders -->
+  <section>
+    <div class="wrap">
+      <div class="center-head">
+        <div class="label accent">Talk to a person</div>
+        <h2 class="display">Our concierges</h2>
+        <p>Real travel specialists in Hong Kong, on hand before, during and after your trip.</p>
+      </div>
+      <div class="experts">
+        <div class="expert"><div class="who"><div class="avatar">MW</div><div><h3>Mei Wong</h3><small>Japan &amp; Korea</small></div></div><dl><div><dt>Languages</dt><dd>EN · 粵 · 普</dd></div><div><dt>Specialty</dt><dd>Ryokans</dd></div></dl></div>
+        <div class="expert"><div class="who"><div class="avatar">AR</div><div><h3>Arjun Rao</h3><small>Islands &amp; resorts</small></div></div><dl><div><dt>Languages</dt><dd>EN · HI</dd></div><div><dt>Specialty</dt><dd>Honeymoons</dd></div></dl></div>
+        <div class="expert"><div class="who"><div class="avatar">SL</div><div><h3>Sophie Lam</h3><small>Europe &amp; rail</small></div></div><dl><div><dt>Languages</dt><dd>EN · 粵 · FR</dd></div><div><dt>Specialty</dt><dd>Rail journeys</dd></div></dl></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact">
+    <div class="wrap">
+      <h3>Have a question, or just want to say hello?<br>We're here for you.</h3>
+      <form action="/contact" method="post">
+        <input name="name" placeholder="Your name" required aria-label="Your name">
+        <input type="email" name="email" placeholder="Email address" required aria-label="Email address">
+        <button class="pill orange">Send <i>↗</i></button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <h2 class="display">Get the latest news</h2>
+        <form class="news" action="/newsletter" method="post">
+          <input type="email" name="email" placeholder="Email address" required aria-label="Email address">
+          <button class="pill light">Subscribe <i>↗</i></button>
+        </form>
+      </div>
+      <div><div class="label">Book</div><a href="#flights">Flights</a><a href="#hotels">Hotels</a><a href="#resorts">Resorts</a><a href="#trains">Trains</a><a href="#attractions">Attractions</a><a href="#packages">Packages</a></div>
+      <div><div class="label">Company</div><a href="#about">About</a><a href="#">Careers</a><a href="https://shop.mela.global/">Mela Shop</a><div class="label" style="margin-top:24px">Help</div><a href="#">Manage booking</a><a href="#">Terms</a><a href="#">Privacy</a></div>
+      <a class="totop" href="#" aria-label="Back to top">↑</a>
+    </div>
+    <div class="legal">
+      <span class="logo"><svg viewBox="0 0 450 415.28"><use href="#m"/></svg><span>booking</span></span>
+      <span>A Mela company · © 2026 M Booking, Hong Kong SAR · Travel Agent Licence No. —</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('[role=tab]');
+  const show = t => {
+    tabs.forEach(b => b.setAttribute('aria-selected', b.dataset.t === t));
+    document.querySelectorAll('.search form').forEach(f => f.hidden = f.id !== t);
+  };
+  tabs.forEach(b => b.onclick = () => show(b.dataset.t));
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    const t = a.getAttribute('href').slice(1);
+    if (document.getElementById(t)?.tagName === 'FORM') a.onclick = e => { e.preventDefault(); show(t); document.querySelector('.search').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+  });
+  document.querySelectorAll('.fav').forEach(b => b.onclick = e => { e.preventDefault(); b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true'); });
+  const peek = document.body.appendChild(Object.assign(document.createElement('img'), { className: 'peek', alt: '' }));
+  document.querySelectorAll('.dest-row').forEach(r => {
+    r.onmouseenter = () => { peek.src = r.querySelector('img').src; peek.classList.add('on'); };
+    r.onmouseleave = () => peek.classList.remove('on');
+  });
+  document.querySelector('.dest-list').onmousemove = e => peek.style.translate = `${e.clientX + 28}px ${e.clientY - 100}px`;
+  const header = document.querySelector('header');
+  const onScroll = () => header.classList.toggle('scrolled', scrollY > 40);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  document.querySelectorAll('.sec-head, .center-head, .band h2, .discover > div, .guide-intro, .experts, .contact .wrap, .foot').forEach(el => el.classList.add('reveal'));
+  document.querySelectorAll('.cards, .dest-list, .posts').forEach(g => [...g.children].forEach((c, i) => { c.classList.add('reveal'); c.style.setProperty('--d', i * 80 + 'ms'); }));
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
