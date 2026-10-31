@@ -131,7 +131,7 @@
   .band { background: var(--green); color: var(--cream); margin-top: 130px; padding: 100px 0 0; }
   .band h2 { color: var(--cream); font-size: clamp(56px, 10vw, 168px); }
   .inl { display: inline-block; width: 2.1em; height: .72em; border-radius: 999px; background: center/cover; vertical-align: .08em; }
-  .band-photo { position: relative; margin-top: 90px; height: 92vh; min-height: 560px;
+  .band-photo { position: relative; margin-top: 90px; height: 68vh; min-height: 470px; max-height: 760px;
     background: linear-gradient(rgba(0,0,0,.52), rgba(0,0,0,.18) 34%, transparent 52%, rgba(0,0,0,.62)), url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2000&q=70) center/cover; }
   .band-photo .badge { top: -75px; left: 50%; translate: -50% 0; }
   .band-note { position: absolute; right: 40px; top: 56px; max-width: 32ch; font-size: 14px; color: #fff; }
@@ -260,7 +260,8 @@
     section { padding-top: 90px; }
     .cards { grid-template-columns: 1fr 1fr; gap: 14px; }
     .band { margin-top: 90px; padding-top: 70px; }
-    .band-photo { height: 80vh; }
+    /* phones need the floor: note sits top, stats wrap tall at the bottom */
+    .band-photo { height: 70vh; min-height: 540px; }
     .band-note { left: 20px; right: 20px; top: 100px; }
     .stats { left: 20px; right: 20px; }
     .discover, .discover-copy, .guide, .posts, .foot { grid-template-columns: 1fr; }
