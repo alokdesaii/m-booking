@@ -181,7 +181,7 @@ Modern evergreen browsers. Two features degrade gracefully rather than breaking:
 
 ## Before launch
 
-- [ ] **Photography** — every image is a hotlinked Unsplash placeholder. Replace with licensed assets, served from your own CDN.
+- [ ] **Photography** — every image is a hotlinked Unsplash placeholder. Replace with licensed assets, served from your own CDN. **When you do, re-check the white text on the hero, the "who we are" band and the brand film.** Each of those sections carries a gradient scrim tuned so text stays readable; a much brighter photo may need its scrim strengthened. There is a shared `text-shadow` as a second line of defence — see the *Legibility over photography* block in `index.html`.
 - [ ] **Copy** — hero deal prices, the Kyoto feature, journal articles and concierge profiles are all invented.
 - [ ] **Stats** — `06 ways to travel`, `24/7 concierge support` and `HK$0 booking fees` need confirming.
 - [ ] **Licence number** — the footer has a blank Travel Agent Licence placeholder.

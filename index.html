@@ -53,10 +53,17 @@
   .logo span { font-weight: 300; letter-spacing: .02em; padding-bottom: .12em; white-space: nowrap; }
   .logo span::after { content: ""; display: inline-block; width: .16em; height: .16em; border-radius: 50%; background: var(--gold); margin-left: .08em; }
 
+  /* Legibility over photography. Two layers, because the photos WILL be swapped:
+     1. each section's gradient keeps a scrim wherever text actually sits;
+     2. this shadow is the fallback for whatever image lands there later.
+     ponytail: the scrim does the work, the shadow is cheap insurance. */
+  .hero h1, .hero-note, .band-note, .stats, .reel h2, .reel .label {
+    text-shadow: 0 1px 2px rgba(0,0,0,.45), 0 2px 16px rgba(0,0,0,.3); }
+
   /* hero */
   /* ponytail: Unsplash placeholder photos throughout; swap for licensed imagery before launch */
   .hero { color: #fff; min-height: 100vh; display: flex; flex-direction: column;
-    background: linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.05) 40%, rgba(0,0,0,.55)), url(https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=2000&q=70) center/cover; }
+    background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.2) 24%, rgba(0,0,0,.44) 44%, rgba(0,0,0,.62) 58%, rgba(0,0,0,.72)), url(https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=2000&q=70) center/cover; }
   header { position: fixed; inset: 0 0 auto; z-index: 30; transition: background .35s, backdrop-filter .35s; }
   header .wrap { display: flex; align-items: center; justify-content: space-between; height: 84px; transition: height .35s; }
   header.scrolled { background: rgba(1,57,39,.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
@@ -69,7 +76,7 @@
   .hero h1 { color: #fff; font-size: clamp(60px, 10vw, 168px); display: grid; margin: 12px 0 0; }
   .hero h1 span:nth-child(2) { justify-self: end; }
   .hero-note { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin: 20px 0 32px; flex-wrap: wrap; }
-  .hero-note p { max-width: 38ch; font-size: 15px; opacity: .9; }
+  .hero-note p { max-width: 38ch; font-size: 15px; }
   .deals { display: flex; flex-wrap: wrap; gap: 6px 28px; font-size: 13px; letter-spacing: .04em; }
   .deals b { color: var(--gold); font-weight: 600; }
 
@@ -125,7 +132,7 @@
   .band h2 { color: var(--cream); font-size: clamp(56px, 10vw, 168px); }
   .inl { display: inline-block; width: 2.1em; height: .72em; border-radius: 999px; background: center/cover; vertical-align: .08em; }
   .band-photo { position: relative; margin-top: 90px; height: 92vh; min-height: 560px;
-    background: linear-gradient(transparent 55%, rgba(0,0,0,.55)), url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2000&q=70) center/cover; }
+    background: linear-gradient(rgba(0,0,0,.52), rgba(0,0,0,.18) 34%, transparent 52%, rgba(0,0,0,.62)), url(https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=2000&q=70) center/cover; }
   .band-photo .badge { top: -75px; left: 50%; translate: -50% 0; }
   .band-note { position: absolute; right: 40px; top: 56px; max-width: 32ch; font-size: 14px; color: #fff; }
   .band-note .label { color: var(--gold); display: block; margin-bottom: 10px; }
@@ -146,7 +153,7 @@
 
   /* reel */
   .reel { margin-top: 130px; height: 86vh; min-height: 520px; display: grid; place-items: center; text-align: center; color: #fff; position: relative;
-    background: linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.4)), url(https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=2000&q=70) center/cover; }
+    background: linear-gradient(rgba(0,0,0,.42), rgba(0,0,0,.28) 38%, rgba(0,0,0,.5)), url(https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=2000&q=70) center/cover; }
   .reel .label { position: absolute; top: 28px; right: 40px; color: #fff; }
   .reel h2 { color: #fff; font-size: clamp(32px, 4vw, 56px); max-width: 18ch; margin: 0 auto 28px; }
   .play { width: 88px; height: 88px; border-radius: 50%; border: 0; background: rgba(255,255,255,.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #fff; font-size: 26px; cursor: pointer; outline: 1px solid rgba(255,255,255,.6); outline-offset: 8px; transition: background .2s; }
