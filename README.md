@@ -54,6 +54,8 @@ python3 -m http.server 8000
 | `index.html` | The homepage. All styles and scripts are inline — one file, one request. |
 | `index-v1.html` | The previous design, kept for reference. Not linked from the live site. |
 | `brand/m-booking-logo.svg` | The logo lockup: the Mela **M** mark plus the word *booking*. |
+| `brand/favicon.svg` | Browser-tab icon — the M mark alone, cream on a green tile. |
+| `favicon.ico` · `apple-touch-icon.png` | Root-level fallbacks, auto-requested by browsers and iOS. Both derive from `brand/favicon.svg`; regenerate them if the mark changes. |
 | `docs/` | Screenshots used in this README. |
 
 ## The page, section by section
